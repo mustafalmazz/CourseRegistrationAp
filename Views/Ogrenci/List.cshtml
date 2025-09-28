@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Ogrenci>
+@{
+    ViewBag.Title = "Öğrenci Listesi";
+}
+<h1 class="text-center">Öğrenci Listesi</h1>
+<hr />
+<a href="/Ogrenci/Create" class="btn btn-outline-success mb-3 col-md-12">Yeni Ekle</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width:150px;">@Html.DisplayNameFor(x => x.OgrenciId)</th>
+            <th>@Html.DisplayNameFor(x => x.OgrenciAd)</th>
+            <th>@Html.DisplayNameFor(x => x.OgrenciSoyad)</th>
+            <th style="width:190px;">İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(i => item.OgrenciId) </td>
+                <td>
+                    @Html.DisplayFor(i =>item.OgrenciAd)
+                </td>
+                <td>@Html.DisplayFor(i => item.OgrenciSoyad)</td>
+                <td>
+                    <a href="/Ogrenci/Edit/@item.OgrenciId" class="btn btn-outline-primary">Edit</a>
+                    <a asp-controller="Ogrenci" asp-action="Delete" asp-route-id="@item.OgrenciId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

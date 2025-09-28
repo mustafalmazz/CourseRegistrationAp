@@ -1,0 +1,27 @@
+﻿@model Ogrenci
+
+@{
+    ViewBag.Title = "Öğrenci Düzenle";
+}
+
+<h1>Öğrenci Düzenle</h1>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="OgrenciId" />
+    <div class="mb-3">
+        <label asp-for="OgrenciAd" class="form-label">Ad</label>
+        <input asp-for="OgrenciAd" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="OgrenciSoyad" class="form-label">Soyad</label>
+        <input asp-for="OgrenciSoyad" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Eposta" class="form-label">Eposta</label>
+        <input asp-for="Eposta" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Telefon" class="form-label">Telefon</label>
+        <input asp-for="Telefon" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>

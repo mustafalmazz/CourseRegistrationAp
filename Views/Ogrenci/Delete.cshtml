@@ -1,0 +1,12 @@
+﻿@model Ogrenci
+@{
+    ViewBag.Title = "Öğrenci Sil";
+}
+
+<h3>@Model.OgrenciAd @Model.OgrenciSoyad İsimli Öğrenciyi Silmek İstiyor Musunuz?</h3>
+<form method="post">
+    <input type="hidden" asp-for="@Model.OgrenciId" /></input>
+    <button class="btn btn-danger" type="submit">Sil</button>
+    <a href="/Ogrenci/List" class="btn btn-outline-primary">Geri Dön</a>
+</form>
+

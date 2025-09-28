@@ -1,6 +1,16 @@
-﻿namespace efcoreApp.Data
+﻿using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
+
+namespace efcoreApp.Data
 {
-    public class DbContext
+    public class DataContext :DbContext
     {
+        public DataContext(DbContextOptions<DataContext> options):base(options)
+        {
+             
+        }
+        public DbSet<Kurs> Kurslar { get; set; }
+        public DbSet<Ogrenci> Ogrenciler { get; set; }
+        public DbSet<KursKayit> KursKayitlari { get; set; } 
     }
 }
