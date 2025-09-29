@@ -1,0 +1,13 @@
+﻿@model Kurs
+@{
+    ViewData["Title"] = "Kurs Ekle";
+}
+<h1 class="text-center">Kurs Ekle</h1>
+<hr />
+<form asp-action="create" method="post">
+    <div class="mb-2">
+        <label asp-for="Baslik" class="form-label">Kurs Başlığı</label>
+        <input asp-for="Baslik" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>

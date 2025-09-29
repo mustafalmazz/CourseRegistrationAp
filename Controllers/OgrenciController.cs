@@ -15,7 +15,7 @@ namespace efcoreApp.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ListAsync()
+        public async Task<IActionResult> List()
         {
             var model = await _context.Ogrenciler.ToListAsync();
             return View(model);
@@ -36,7 +36,7 @@ namespace efcoreApp.Controllers
             return RedirectToAction("List");
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
 
             if(id == null || id <= 0)
@@ -44,7 +44,12 @@ namespace efcoreApp.Controllers
                 return NotFound();
             }
 
-            var model = _context.Ogrenciler.FirstOrDefault(x => x.OgrenciId == id);
+            var model = await
+                _context.Ogrenciler
+                .Include(o=>o.KursKayitlari)
+                .ThenInclude(o=>o.Kurs)
+                .FirstOrDefaultAsync(x => x.OgrenciId == id);
+
             if (model == null)
             {
                 return NotFound();

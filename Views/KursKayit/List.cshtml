@@ -1,0 +1,23 @@
+﻿@model IEnumerable<KursKayit>
+@{
+    ViewBag.Title = "Kurs Kayıt Listesi";
+}
+<h1 class="text-center">Kurs Kayıtları</h1>
+<hr />
+<a href="/KursKayit/Create" class="btn btn-success mb-3 col-md-1">Yeni Ekle</a>
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th class="text-center" style="width:600px;">Kurs</th>
+            <th class="text-center">Öğrenci</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model){
+        <tr>
+            <td>@item.Kurs.Baslik</td>
+            <td>@item.Ogrenci.OgrenciAd</td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -9,5 +9,9 @@ namespace efcoreApp.Data
         public int OgrenciId { get; set; }
         public int KursId { get; set; }
         public DateTime KayitTarihi { get; set; }
+
+        //navigation properties
+        public Ogrenci? Ogrenci { get; set; }
+        public Kurs? Kurs { get; set; }
     }
 }

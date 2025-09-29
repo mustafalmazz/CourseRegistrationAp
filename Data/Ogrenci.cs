@@ -10,5 +10,6 @@ namespace efcoreApp.Data
         public string? OgrenciSoyad { get; set; }
         public string? Eposta { get; set; }
         public string? Telefon { get; set; }
+        public ICollection<KursKayit>? KursKayitlari { get; set; }
     }
 }
