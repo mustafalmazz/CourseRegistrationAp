@@ -1,0 +1,15 @@
+﻿@model Ogretmen
+@{
+    ViewData["Title"] = "Öğretmen Sil";
+
+}
+
+<h1 class="text-center">Öğretmen Sil</h1>
+<hr />
+
+<form method="post">
+    <input type="hidden" asp-for="OgretmenId" />
+    <text><b>@Model.Ad </b>isimli öğretmeni silmek istiyor musunuz?</text><br />
+    <button type="submit" class="btn btn-danger">Sil</button>
+    <a href="/Ogretmen/List" class="btn btn-primary">Geri Dön</a>
+</form>

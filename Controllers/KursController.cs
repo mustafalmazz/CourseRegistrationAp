@@ -1,6 +1,8 @@
 ﻿using efcoreApp.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace efcoreApp.Controllers
 {
@@ -12,79 +14,125 @@ namespace efcoreApp.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        // Kurs listesi
+        public async Task<IActionResult> List()
         {
-            return View();
-        }
-        public IActionResult List()
-        {
-            var model = _context.Kurslar.ToList();
+            var model = await _context.Kurslar
+                .Include(o => o.Ogretmen)
+                .Include(o => o.KursKayitlari)
+                    .ThenInclude(k => k.Ogrenci)
+                .ToListAsync();
+
             return View(model);
         }
-        public IActionResult Create()
+
+        // Kurs ekleme GET
+        public async Task<IActionResult> Create()
         {
+            ViewBag.OgretmenListesi = new SelectList(
+                await _context.Ogretmenler.ToListAsync(),
+                "OgretmenId",
+                "Ad"
+            );
+
             return View();
         }
+
+        // Kurs ekleme POST
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Kurs kurs)
         {
-            if (kurs == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                ViewBag.OgretmenListesi = new SelectList(
+                    await _context.Ogretmenler.ToListAsync(),
+                    "OgretmenId",
+                    "Ad",
+                    kurs.OgretmenId
+                );
+                return View(kurs);
             }
+
             _context.Kurslar.Add(kurs);
             await _context.SaveChangesAsync();
-            return RedirectToAction("List");
+            return RedirectToAction(nameof(List));
         }
-        public IActionResult Edit(int? id)
+
+        // Kurs düzenleme GET
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var course = _context.Kurslar
+            if (id == null) return NotFound();
+
+            var course = await _context.Kurslar
                 .Include(c => c.KursKayitlari)
-                .ThenInclude(c => c.Ogrenci).FirstOrDefault(c => c.KursId == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
+                    .ThenInclude(c => c.Ogrenci)
+                .FirstOrDefaultAsync(c => c.KursId == id);
+
+            if (course == null) return NotFound();
+
+            ViewBag.OgretmenListesi = new SelectList(
+                await _context.Ogretmenler.ToListAsync(),
+                "OgretmenId",
+                "Ad",
+                course.OgretmenId
+            );
+
             return View(course);
         }
+
+        // Kurs düzenleme POST
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Kurs kurs)
         {
-            if (kurs == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                ViewBag.OgretmenListesi = new SelectList(
+                    await _context.Ogretmenler.ToListAsync(),
+                    "OgretmenId",
+                    "Ad",
+                    kurs.OgretmenId
+                );
+                return View(kurs);
             }
-            var model = _context.Kurslar
-                .FirstOrDefault(c => c.KursId == kurs.KursId);
-            if (model == null)
-            {
-                return NotFound();
-            }
+
+            var model = await _context.Kurslar.FirstOrDefaultAsync(c => c.KursId == kurs.KursId);
+            if (model == null) return NotFound();
+
             model.Baslik = kurs.Baslik;
+            model.OgretmenId = kurs.OgretmenId;
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("List", "Kurs");
+            return RedirectToAction(nameof(List));
         }
-        public IActionResult Delete(int? id)
+
+        // Kurs silme GET
+        public async Task<IActionResult> Delete(int? id)
         {
-            var silinecek = _context.Kurslar.Find(id);
+            if (id == null) return NotFound();
+
+            var silinecek = await _context.Kurslar
+                .Include(c => c.Ogretmen)
+                .FirstOrDefaultAsync(c => c.KursId == id);
+
+            if (silinecek == null) return NotFound();
+
             return View(silinecek);
         }
-        [HttpPost]
-        public async Task<IActionResult> DeleteAsync(Kurs kurs)
+
+        // Kurs silme POST
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var model = _context.Kurslar.FirstOrDefault(c => c.KursId == kurs.KursId);
-            if (model == null)
-            {
-                return NotFound();
-            }
+            var model = await _context.Kurslar.FirstOrDefaultAsync(c => c.KursId == id);
+            if (model == null) return NotFound();
+
             _context.Kurslar.Remove(model);
             await _context.SaveChangesAsync();
-            return RedirectToAction("List");
+            return RedirectToAction(nameof(List));
         }
     }
 }
